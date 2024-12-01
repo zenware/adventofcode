@@ -4,6 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"slices"
+	"sort"
+	"strings"
 )
 
 func main() {
@@ -17,11 +20,15 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	var lines []string
+	var leftlist []string
+	var rightlist []string
 
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		split_lists := strings.Split(scanner.Text(), " ")
+		leftlist = append(leftlist, split_lists[0])
+		rightlist = append(rightlist, split_lists[1])
 	}
+	fmt.Println(rightlist)
 
 	if err := scanner.Err(); err != nil {
 		fmt.Println("Error reading file:", err)
@@ -29,5 +36,18 @@ func main() {
 		return
 	}
 
-	fmt.Println(lines)
+	sort.Slice(leftlist, func(i, j int) bool {
+		return leftlist[i] < leftlist[j]
+	})
+
+	//slices.Sort(rightlist)
+	//sort.Sort(rightlist)
+	slices.SortFunc(rightlist, func(a, b string) int {
+		return strings.Compare(a, b)
+	})
+
+	//slices.Reduce(leftlist, func(a, b string) string {})
+
+	slices.Compare(leftlist, rightlist)
+	fmt.Println(rightlist)
 }
