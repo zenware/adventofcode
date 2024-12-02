@@ -21,29 +21,24 @@ func main() {
 }
 */
 
-func Day1Puzzle1(input io.Reader) int {
+func Day1ListBuilder(input io.Reader) ([]int, []int) {
 	scanner := bufio.NewScanner(input)
 	var leftlist []int
 	var rightlist []int
 
-	input_lines := 0
 	for scanner.Scan() {
 		var leftitem int
 		var rightitem int
 		fmt.Sscanln(scanner.Text(), &leftitem, &rightitem)
 		leftlist = append(leftlist, leftitem)
 		rightlist = append(rightlist, rightitem)
-		input_lines++
 	}
+	return leftlist, rightlist
+}
 
+func Day1Puzzle1(leftlist []int, rightlist []int) int {
 	slices.Sort(leftlist)
 	slices.Sort(rightlist)
-
-	if slices.Min(leftlist) != leftlist[0] {
-		fmt.Println("Something has gone wrong")
-	} else {
-		fmt.Println("Something has gone right")
-	}
 
 	total_distance := 0
 	for i := 0; i < len(leftlist); i++ {
@@ -51,13 +46,30 @@ func Day1Puzzle1(input io.Reader) int {
 		total_distance += distance
 	}
 
-	fmt.Println("Total Distance:", total_distance)
-
 	return total_distance
 }
 
-func Day2Puzzle2(input io.Reader) int {
-  return 0
+// Add up numbers in the left list, after multiplying them by occurrences in
+// theright list.
+func Day1Puzzle2(leftlist []int, rightlist []int) int {
+	slices.Sort(leftlist)
+	slices.Sort(rightlist)
+
+	// Count how many times each number appears in the right list.
+	occurrence_counter := make(map[int]int)
+	for i := 0; i < len(rightlist); i++ {
+		occurrence_counter[rightlist[i]]++
+	}
+
+	// Multiply each number in the left list by the times it appears in the
+	// right list. And sum the results.
+	total_similarity := 0
+	for i := 0; i < len(leftlist); i++ {
+		similarity := leftlist[i] * occurrence_counter[leftlist[i]]
+		fmt.Println("Similarity:", similarity)
+		total_similarity += similarity
+	}
+	return total_similarity
 }
 
 func main() {
@@ -68,6 +80,8 @@ func main() {
 	}
 	defer file.Close()
 
-	fmt.Println("Day 1, Puzzle 1:", Day1Puzzle1(file))
-	fmt.Println("Day 1, Puzzle 2:", Day1Puzzle2(file))
+	leftlist, rightlist := Day1ListBuilder(file)
+
+	fmt.Println("Day 1, Puzzle 1:", Day1Puzzle1(leftlist, rightlist))
+	fmt.Println("Day 1, Puzzle 2:", Day1Puzzle2(leftlist, rightlist))
 }
