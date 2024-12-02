@@ -56,6 +56,10 @@ func Day1Puzzle1(input io.Reader) int {
 	return total_distance
 }
 
+func Day2Puzzle2(input io.Reader) int {
+  return 0
+}
+
 func main() {
 	file, err := os.Open("2024/day01/input.txt")
 	if err != nil {
@@ -65,4 +69,5 @@ func main() {
 	defer file.Close()
 
 	fmt.Println("Day 1, Puzzle 1:", Day1Puzzle1(file))
+	fmt.Println("Day 1, Puzzle 2:", Day1Puzzle2(file))
 }
