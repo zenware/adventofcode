@@ -140,17 +140,23 @@ func (report Day2Report) isDescending() bool {
 	return true
 }
 
+// How many reports are safe?
 func Day2Puzzle1(reports []Day2Report) int {
 	safe_report_count := 0
 
 	for i := 0; i < len(reports); i++ {
 		if reports[i].IsSafe() {
-			//fmt.Println(reports[i])
 			safe_report_count++
 		}
 	}
 
 	return safe_report_count
+}
+
+// How many reports are safe with one level removed?
+func Day2Puzzle2(reports []Day2Report) int {
+
+	return 0
 }
 
 func Day2Puzzles() {
@@ -163,6 +169,7 @@ func Day2Puzzles() {
 
 	reports := Day2ReportBuilder(file)
 	fmt.Println("Day 2, Puzzle 1:", Day2Puzzle1(reports))
+	fmt.Println("Day 2, Puzzle 1:", Day2Puzzle2(reports))
 }
 
 func main() {
