@@ -6,6 +6,8 @@ import (
 	"io"
 	"os"
 	"slices"
+	"strconv"
+	"strings"
 )
 
 func Day1ListBuilder(input io.Reader) ([]int, []int) {
@@ -72,16 +74,25 @@ func Day1Puzzles() {
 	fmt.Println("Day 1, Puzzle 2:", Day1Puzzle2(leftlist, rightlist))
 }
 
-type Day2Report [5]int
+type Day2Report []int
 
 func Day2ReportBuilder(input io.Reader) []Day2Report {
 	scanner := bufio.NewScanner(input)
 	var reports []Day2Report
 
 	for scanner.Scan() {
-		var report Day2Report
-		fmt.Sscanln(scanner.Text(), &report[0], &report[1], &report[2], &report[3], &report[4])
-		reports = append(reports, report)
+		var r Day2Report
+		str_levels := strings.Fields(scanner.Text())
+
+		for _, s := range str_levels {
+			num, err := strconv.Atoi(s)
+			if err != nil {
+				fmt.Println("Error converting string to int:", err)
+				continue
+			}
+			r = append(r, num)
+		}
+		reports = append(reports, r)
 	}
 	return reports
 }
