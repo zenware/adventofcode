@@ -54,3 +54,36 @@ func TestDay1Puzzle2(t *testing.T) {
 		}
 	}
 }
+
+// Report Safety Counts
+func TestDay2Puzzle1(t *testing.T) {
+	testCases := []struct {
+		inputString string
+		expected    int
+	}{
+		{`7 6 4 2 1 
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9`, 2},
+		{`1 9 1 9 1`, 0},
+		{`1 1 1 1 1`, 0},
+		{`1 2 3 4 5`, 1},
+		{`5 4 3 2 1`, 1},
+		{`2 3 2 4 5`, 0},
+		{`9 2 3 4 5
+1 9 3 4 5
+1 2 9 4 5
+1 2 3 9 5
+1 2 3 4 9`, 0},
+	}
+
+	for _, tc := range testCases {
+		reports := Day2ReportBuilder(strings.NewReader(tc.inputString))
+		result := Day2Puzzle1(reports)
+		if result != tc.expected {
+			t.Errorf("Day2Puzzle2(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
+		}
+	}
+}
