@@ -186,7 +186,62 @@ func Day2Puzzles() {
 	fmt.Println("Day 2, Puzzle 2:", Day2Puzzle2(reports))
 }
 
+type Day3Instruction struct {
+	Operation string
+	Left      int
+	Right     int
+}
+
+// In this case we're worried about corrupted memory.
+// The only valid instructions read like: "mul(3,4)"
+// If there are spaces, or different punctuation, then it's not valid.
+func Day3InstructionBuilder(input io.Reader) []Day3Instruction {
+
+	return []Day3Instruction{
+		{Operation: "mul", Left: 3, Right: 4},
+	}
+}
+
+func (instruction Day3Instruction) Execute() (int, error) {
+	// Right now we only support multiplication.
+	switch instruction.Operation {
+	case "mul":
+		return instruction.Left * instruction.Right, nil
+	}
+	// TODO: Handle returning an error.
+	// Really return 0 means "Invalid" right now.
+	// But that may not actually be the case.
+	return 0, fmt.Errorf("invalid instruction: %s", instruction.Operation)
+}
+
+func Day3Puzzle1(instructions []Day3Instruction) int {
+	total := 0
+	for _, instruction := range instructions {
+		result, err := instruction.Execute()
+		if err != nil {
+			fmt.Println("Error executing instruction:", err)
+			continue
+		}
+		total += result
+	}
+	return 0
+}
+
+func Day3Puzzles() {
+	file, err := os.Open("2024/day03/input.txt")
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		os.Exit(2)
+	}
+	defer file.Close()
+
+	instructions := Day3InstructionBuilder(file)
+	fmt.Println("Day 3, Puzzle 1:", Day3Puzzle1(instructions))
+	//fmt.Println("Day 3, Puzzle 2:", Day3Puzzle2(reports))
+}
+
 func main() {
 	//Day1Puzzles()
-	Day2Puzzles()
+	//Day2Puzzles()
+	Day3Puzzles()
 }
