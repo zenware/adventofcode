@@ -97,11 +97,28 @@ func TestDay3Puzzle1(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		valid_mul_instructions := Day3InstructionBuilder(strings.NewReader(tc.inputString))
-		//valid_mul_sum := Day3ExecuteMul(valid_mul_instructions)
-		result := Day3Puzzle1(valid_mul_instructions)
+		instructions := Day3InstructionBuilder(strings.NewReader(tc.inputString))
+		result := Day3Puzzle1(instructions)
 		if result != tc.expected {
 			t.Errorf("Day3Puzzle1(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
+		}
+	}
+
+}
+
+func TestDay3Puzzle2(t *testing.T) {
+	testCases := []struct {
+		inputString string
+		expected    int
+	}{
+		{`xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`, 48},
+	}
+
+	for _, tc := range testCases {
+		instructions := Day3InstructionBuilder(strings.NewReader(tc.inputString))
+		result := Day3Puzzle2(instructions)
+		if result != tc.expected {
+			t.Errorf("Day3Puzzle2(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
 		}
 	}
 
