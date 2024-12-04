@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -196,10 +197,21 @@ type Day3Instruction struct {
 // The only valid instructions read like: "mul(3,4)"
 // If there are spaces, or different punctuation, then it's not valid.
 func Day3InstructionBuilder(input io.Reader) []Day3Instruction {
+	var instructions []Day3Instruction
 
-	return []Day3Instruction{
-		{Operation: "mul", Left: 3, Right: 4},
+	scanner := bufio.NewScanner(input)
+	mul_match := regexp.MustCompile(`mul\(\d+,\d+\)`)
+
+	for scanner.Scan() {
+		mul_matches := mul_match.FindAllString(scanner.Text(), -1)
+		for _, match := range mul_matches {
+			new_instruction := Day3Instruction{Operation: "mul", Left: 0, Right: 0}
+			fmt.Sscanf(match, "mul(%d,%d)", &new_instruction.Left, &new_instruction.Right)
+			instructions = append(instructions, new_instruction)
+		}
 	}
+
+	return instructions
 }
 
 func (instruction Day3Instruction) Execute() (int, error) {
@@ -224,7 +236,7 @@ func Day3Puzzle1(instructions []Day3Instruction) int {
 		}
 		total += result
 	}
-	return 0
+	return total
 }
 
 func Day3Puzzles() {
