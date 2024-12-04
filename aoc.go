@@ -103,39 +103,25 @@ func Day2ReportBuilder(input io.Reader) []Day2Report {
 // Technically it is more efficient, and possible, to check all of these properties
 // in one pass, but I don't wanna.
 func (report Day2Report) IsSafe() bool {
-	// NOTE: The runtime complexity here is bad, and I don't care rn.
-	return report.safeRateOfChange() && (report.isAscending() || report.isDescending())
-}
+	isIncreasing := report[1] > report[0]
 
-func (report Day2Report) safeRateOfChange() bool {
-	// Check the whole report
 	for i := 1; i < len(report); i++ {
 		abs_diff := max(report[i-1], report[i]) - min(report[i-1], report[i])
 		// Differences must be AT LEAST one and AT MOST three.
 		if abs_diff < 1 || abs_diff > 3 {
-			//if 1 > abs_diff && abs_diff > 3 {
 			return false
 		}
 
-	}
-	return true
-}
-
-func (report Day2Report) isAscending() bool {
-	for i := 1; i < len(report); i++ {
-		// Left side cannot be greater than or equal to the right side.
-		if report[i-1] >= report[i] {
-			return false
+		if isIncreasing {
+			if report[i-1] >= report[i] {
+				return false
+			}
+		} else {
+			if report[i-1] <= report[i] {
+				return false
+			}
 		}
-	}
-	return true
-}
 
-func (report Day2Report) isDescending() bool {
-	for i := 1; i < len(report); i++ {
-		if report[i-1] <= report[i] {
-			return false
-		}
 	}
 	return true
 }
@@ -153,10 +139,38 @@ func Day2Puzzle1(reports []Day2Report) int {
 	return safe_report_count
 }
 
-// How many reports are safe with one level removed?
-func Day2Puzzle2(reports []Day2Report) int {
+// Brute force solution to Day 2, Puzzle 2.
+// Allows the reactor/record to safely tolerate a single bad level.
+func (report Day2Report) RemoveFromIndex(index int) Day2Report {
+	// https://stackoverflow.com/a/57213476
+	ret := make(Day2Report, 0, len(report)-1)
+	ret = append(ret, report[:index]...)
+	return append(ret, report[index+1:]...)
+}
 
-	return 0
+func Day2Puzzle2(reports []Day2Report) int {
+	safe_report_count := 0
+
+	for i := 0; i < len(reports); i++ {
+		// If a report is safe to begin with, then add it to the count and move on.
+		if reports[i].IsSafe() {
+			safe_report_count++
+			continue
+		}
+		// Problem Dampener
+		// Generate reports with one level removed and check if they are safe.
+		// If the are, then add them to the count.
+		for j := 0; j < len(reports[i]); j++ {
+			dampened_report := make(Day2Report, len(reports[i])-1)
+			copy(dampened_report, reports[i].RemoveFromIndex(j))
+			if dampened_report.IsSafe() {
+				safe_report_count++
+				break // Prevent a single report from being counted twice.
+			}
+		}
+	}
+
+	return safe_report_count
 }
 
 func Day2Puzzles() {
@@ -169,7 +183,7 @@ func Day2Puzzles() {
 
 	reports := Day2ReportBuilder(file)
 	fmt.Println("Day 2, Puzzle 1:", Day2Puzzle1(reports))
-	fmt.Println("Day 2, Puzzle 1:", Day2Puzzle2(reports))
+	fmt.Println("Day 2, Puzzle 2:", Day2Puzzle2(reports))
 }
 
 func main() {
