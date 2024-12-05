@@ -402,6 +402,39 @@ func (wordsearch Day4WordSearch) ExtractLines(min_length int) []string {
 	return lines
 }
 
+func (wordsearch Day4WordSearch) Day4FindMASCrossings() int {
+	count := 0
+	rows := len(wordsearch)
+	cols := len(wordsearch[0])
+
+	// We aren't actually getting an empty grid in practice, but just in case.
+	if rows == 0 && cols == 0 {
+		return 0
+	}
+
+	// Find all the "A"'s, and check their diags
+	for row := 1; row < rows-1; row++ {
+		for col := 1; col < cols-1; col++ {
+			// Skip non-A's
+			if wordsearch[row][col] != 'A' {
+				continue
+			}
+			// Test the diagonals.
+			//var tlbrDiag, trblDiag []rune
+			tlbrDiag := string([]rune{wordsearch[row-1][col-1], wordsearch[row][col], wordsearch[row+1][col+1]})
+			trblDiag := string([]rune{wordsearch[row-1][col+1], wordsearch[row][col], wordsearch[row+1][col-1]})
+
+			validTlbr := tlbrDiag == "MAS" || tlbrDiag == "SAM"
+			validTrbl := trblDiag == "MAS" || trblDiag == "SAM"
+
+			if validTlbr && validTrbl {
+				count++
+			}
+		}
+	}
+	return count
+}
+
 func Day4WordSearchBuilder(input io.Reader) Day4WordSearch {
 	var wordsearch Day4WordSearch
 	scanner := bufio.NewScanner(input)
@@ -418,8 +451,11 @@ func Day4Puzzle1(wordsearch Day4WordSearch) int {
 	return wordsearch.CountWordOccurrences("XMAS")
 }
 
-func Day4Puzzle2() int {
-	return 0
+// How many times does "MAS" cross itself in the word search?
+// :/ this has come as a surprise.
+// My best guess for a shortcut is to find all the "A"'s, and check their diags
+func Day4Puzzle2(wordsearch Day4WordSearch) int {
+	return wordsearch.Day4FindMASCrossings()
 }
 
 func Day4Puzzles() {
@@ -432,12 +468,12 @@ func Day4Puzzles() {
 
 	wordsearch := Day4WordSearchBuilder(file)
 	fmt.Println("Day 4, Puzzle 1:", Day4Puzzle1(wordsearch))
-	fmt.Println("Day 4, Puzzle 2:", Day4Puzzle2())
+	fmt.Println("Day 4, Puzzle 2:", Day4Puzzle2(wordsearch))
 }
 
 func main() {
-	Day1Puzzles()
-	Day2Puzzles()
-	Day3Puzzles()
+	//Day1Puzzles()
+	//Day2Puzzles()
+	//Day3Puzzles()
 	Day4Puzzles()
 }
