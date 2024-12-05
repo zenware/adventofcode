@@ -147,7 +147,53 @@ MXMXAXMASX`, 18},
 		wordsearch := Day4WordSearchBuilder(strings.NewReader(tc.inputString))
 		result := Day4Puzzle1(wordsearch)
 		if result != tc.expected {
-			t.Errorf("Day3Puzzle2(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
+			t.Errorf("Day4Puzzle1(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
+		}
+	}
+
+}
+
+func TestDay5Puzzle1(t *testing.T) {
+	testCases := []struct {
+		inputString string
+		expected    int
+	}{
+		{`47|53
+97|13
+97|61
+97|47
+75|29
+61|13
+75|53
+29|13
+97|29
+53|29
+61|53
+97|53
+61|29
+47|13
+75|47
+97|75
+47|61
+75|61
+47|29
+75|13
+53|13
+
+75,47,61,53,29
+97,61,53,29,13
+75,29,13
+75,97,47,61,53
+61,13,29
+97,13,75,29,47`, 143},
+		{``, 0},
+	}
+
+	for _, tc := range testCases {
+		rules, updates := Day5BuildPageOrderingRulesAndUpdates(strings.NewReader(tc.inputString))
+		result := Day5Puzzle1(rules, updates)
+		if result != tc.expected {
+			t.Errorf("Day5Puzzle1(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
 		}
 	}
 

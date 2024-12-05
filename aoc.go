@@ -471,9 +471,67 @@ func Day4Puzzles() {
 	fmt.Println("Day 4, Puzzle 2:", Day4Puzzle2(wordsearch))
 }
 
+// In text specified like `12|7` means that page 12 must be before page 7.
+type Day5PageOderingRule struct {
+	EarlierPageNumber int
+	LaterPageNumber   int
+}
+
+// Since there will be many of them.
+type Day5PageOrderingRules []Day5PageOderingRule
+
+// List of pages, `7,9,12,45,3` indicating an update.
+// We will need to use the Day5PageOrderingRules to determine if these are
+// in the correct order.
+type Day5PageUpdate []int
+type Day5PageUpdates []Day5PageUpdate
+
+// This reads in a text file like:
+// ```12|7\n\n7, 12\n```
+// A blank line separates the rules from the updates.
+func Day5BuildPageOrderingRulesAndUpdates(input io.Reader) (Day5PageOrderingRules, Day5PageUpdates) {
+	var pageOrderingRules Day5PageOrderingRules
+	var pageUpdates Day5PageUpdates
+
+	scanner := bufio.NewScanner(input)
+	// Scan rules until the first blank line and then scan updates.
+	// Or read them all into memory first as []string and then split might be easier.
+	for scanner.Scan() {
+		var pageOderingRule Day5PageOderingRule
+		fmt.Sscanf(scanner.Text(), "%d|%d", &pageOderingRule.EarlierPageNumber, &pageOderingRule.LaterPageNumber)
+		pageOrderingRules = append(pageOrderingRules, pageOderingRule)
+	}
+
+	return pageOrderingRules, pageUpdates
+}
+
+// Find the middle number of each correctly ordered page update.
+func Day5Puzzle1(rules Day5PageOrderingRules, updates Day5PageUpdates) int {
+	return 0
+}
+
+func Day5Puzzle2(rules Day5PageOrderingRules, updates Day5PageUpdates) int {
+	return 0
+}
+
+func Day5Puzzles() {
+	file, err := os.Open("2024/day05/input.txt")
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		os.Exit(2)
+	}
+	defer file.Close()
+
+	rules, updates := Day5BuildPageOrderingRulesAndUpdates(file)
+
+	fmt.Println("Day 5, Puzzle 1:", Day5Puzzle1(rules, updates))
+	fmt.Println("Day 5, Puzzle 2:", Day5Puzzle2(rules, updates))
+}
+
 func main() {
 	//Day1Puzzles()
 	//Day2Puzzles()
 	//Day3Puzzles()
 	Day4Puzzles()
+	Day5Puzzles()
 }
