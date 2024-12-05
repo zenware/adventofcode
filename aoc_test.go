@@ -123,3 +123,32 @@ func TestDay3Puzzle2(t *testing.T) {
 	}
 
 }
+
+func TestDay4Puzzle1(t *testing.T) {
+	testCases := []struct {
+		inputString string
+		expected    int
+	}{
+		{`MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX`, 18},
+		{`XMAS`, 1},
+		{`XSAM`, 0},
+	}
+
+	for _, tc := range testCases {
+		wordsearch := Day4WordSearchBuilder(strings.NewReader(tc.inputString))
+		result := Day4Puzzle1(wordsearch)
+		if result != tc.expected {
+			t.Errorf("Day3Puzzle2(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
+		}
+	}
+
+}
