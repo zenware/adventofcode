@@ -644,4 +644,5 @@ func main() {
 	//Day3Puzzles()
 	Day4Puzzles()
 	Day5Puzzles()
+	Day6Puzzles()
 }
