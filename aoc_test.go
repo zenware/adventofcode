@@ -198,3 +198,31 @@ func TestDay5Puzzle1(t *testing.T) {
 	}
 
 }
+
+func TestDay6Puzzle1(t *testing.T) {
+	testCases := []struct {
+		inputString string
+		expected    int
+	}{
+		{`....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#...`, 41},
+		{``, 0},
+	}
+
+	for _, tc := range testCases {
+		aocmap := Day6MapBuilder(strings.NewReader(tc.inputString))
+		result := Day6Puzzle1(aocmap)
+		if result != tc.expected {
+			t.Errorf("Day6Puzzle1(%s) returned %d, expected %d", tc.inputString, result, tc.expected)
+		}
+	}
+
+}
